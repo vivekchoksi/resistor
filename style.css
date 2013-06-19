@@ -45,7 +45,7 @@ h1 {
 .blue { background-color: blue; }
 .purple { background-color: purple; }
 .gray { background-color: gray; }
-.white { background-color: white; }
+.white { background-color: #eeeeee; }
 
 .tol.gold { background-color: #B59F0E; }
 .tol.silver { background-color: silver; }
