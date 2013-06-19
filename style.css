@@ -1,0 +1,67 @@
+
+html, body {
+	font-family: sans-serif;
+	font-weight: bold;
+	text-align: center;
+	height: 100%;
+}
+
+h1 {
+	margin-top: 60px;
+	margin-bottom: 30px;
+	font-family: 'Nunito', sans-serif;
+}
+
+.small {
+	font-size: 80%;
+}
+
+.stripe {
+	width: 23px;
+	height: 46px;
+	margin: 0px;
+	display: inline-block;
+	position: relative;
+	top: 40px;
+	left: -5px;
+	z-index: -1; 
+}
+
+.stripe.tol {
+    position: absolute; 
+	width: 19px;
+	height: 62px;
+	left: 200px;
+	top: 32px;
+	/*background-color: #B59F0E; */
+}
+
+.black { background-color: black; }
+.brown { background-color: brown; }
+.red { background-color: red; }
+.orange { background-color: orange; }
+.yellow { background-color: yellow; }
+.green { background-color: green; }
+.blue { background-color: blue; }
+.purple { background-color: purple; }
+.gray { background-color: gray; }
+.white { background-color: white; }
+
+.tol.gold { background-color: #B59F0E; }
+.tol.silver { background-color: silver; }
+.tol.red { background-color: red; }
+
+
+.container {
+	position: relative; 
+	width: 300px;
+	height: 150px;
+	/* from http://d3i5bpxkxvwmz.cloudfront.net/resized/images/remote/http_s.eeweb.com/
+	 * members/andrew_carter/blog/2011/10/24/single-resistor-1319476226_366_150_75.jpg  */
+	background-image: url("./resistor.png");
+	background-repeat: no-repeat;
+	background-size: 300px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
