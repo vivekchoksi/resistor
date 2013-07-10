@@ -17,13 +17,15 @@ h1 {
 }
 
 .band {
-	width: 23px;
+	width: 24px;
 	height: 46px;
 	margin: 0px;
 	display: inline-block;
 	position: relative;
 	top: 40px;
-	left: -5px;
+	left: -6px;
+	background-image: url("./unknown_color.png");
+	background-position: center;
 	z-index: -1; 
 }
 
@@ -33,24 +35,22 @@ h1 {
 	height: 62px;
 	left: 200px;
 	top: 32px;
-	/*background-color: #B59F0E; */
 }
 
-.black { background-color: black; }
-.brown { background-color: brown; }
-.red { background-color: red; }
-.orange { background-color: orange; }
-.yellow { background-color: yellow; }
-.green { background-color: green; }
-.blue { background-color: blue; }
-.purple { background-color: purple; }
-.gray { background-color: gray; }
-.white { background-color: #eeeeee; }
+.black { background-color: black; background-image: none; }
+.brown { background-color: brown; background-image: none; }
+.red { background-color: red; background-image: none; }
+.orange { background-color: orange; background-image: none; }
+.yellow { background-color: yellow; background-image: none; }
+.green { background-color: green; background-image: none; }
+.blue { background-color: blue; background-image: none; }
+.purple { background-color: purple; background-image: none; }
+.gray { background-color: gray; background-image: none; }
+.white { background-color: #eeeeee; background-image: none; }
 
-.tol.gold { background-color: #B59F0E; }
-.tol.silver { background-color: silver; }
-.tol.red { background-color: red; }
-
+.tol.gold { background-color: #B59F0E; background-image: none; }
+.tol.silver { background-color: silver; background-image: none; }
+.tol.red { background-color: red; background-image: none; }
 
 .container {
 	position: relative; 
@@ -64,4 +64,3 @@ h1 {
 	margin-left: auto;
 	margin-right: auto;
 }
-

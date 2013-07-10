@@ -12,7 +12,7 @@ function ResistorCalculator(inputField, imgContainer, resultText){
     // Store relevant elements on the object 
     this.inputField = document.getElementById(inputField);
     this.resultText = document.getElementById(resultText);
-    var imgContainer = document.getElementById(imgContainer);
+    var myImgContainer = document.getElementById(imgContainer);
 
     // This privileged method exploits the id of imgContainer to create
     // unique ids for resistor color bands.
@@ -26,7 +26,7 @@ function ResistorCalculator(inputField, imgContainer, resultText){
     for (var i = 0; i < 4; i++){
         this.bands[i] = document.createElement("DIV");
         this.bands[i].id = this.getBandId(i);
-        imgContainer.appendChild(this.bands[i]);
+        myImgContainer.appendChild(this.bands[i]);
     }
 
     this.displayDefaults();
