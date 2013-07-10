@@ -1,11 +1,11 @@
-// FIXME: user can't instantiate 2 RCs b/c band ids wouldn't be unique. 
-// could fix prototype methods to go away; instead return a value
-
 
 /* Constructor function.
  * @param inputField id for the input element where the user types band colors
  * @param imgContainer id of div that will contain the resistor graphics
  * @param resultText id of the element that will display resistance
+ *
+ * Note: band numbers (e.g. 4 bands including tolerance band) are hard-coded
+ * for readability. 
  */
 function ResistorCalculator(inputField, imgContainer, resultText){
 
@@ -14,8 +14,8 @@ function ResistorCalculator(inputField, imgContainer, resultText){
     this.resultText = document.getElementById(resultText);
     var imgContainer = document.getElementById(imgContainer);
 
-    // This privileged method uses the unique id of imgContainer to create
-    // a unique id for a resistor color band. 
+    // This privileged method exploits the id of imgContainer to create
+    // unique ids for resistor color bands.
     ResistorCalculator.prototype.getBandId = function(bandIndex){
         var uniqueIdPrefix = imgContainer + "_band_";
         return uniqueIdPrefix + bandIndex;
@@ -45,55 +45,51 @@ function ResistorCalculator(inputField, imgContainer, resultText){
             isDefaultText = false;
         }
 
-        obj.inputField.style.color = "#000";
+        obj.inputField.style.color = "black";
         obj.displayResistance();
     };
     this.inputField.onblur = function(){
-        obj.inputField.style.color = "#888";
+        obj.inputField.style.color = "gray";
         // Re-display default text only if inputField is blank
-        if (obj.inputField.value == "") {
+        if (obj.inputField.value === "") {
             obj.displayDefaults();
             isDefaultText = true;
         }
     };
 };
 
+// Read the user input, display colored resistance bands, and display
+// the resistance result. 
 ResistorCalculator.prototype.displayResistance = function(){
+        // input text as array
+    var inputColors = this.inputField.value.toLowerCase().split(" ").removeSpaces(),  
+        RC = ResistorCalculator,
+        len = inputColors.length,
+        numIterations = (len == 4) ? 4 : 3;
 
-    // Grab input text into the array inputColors
-    var inputColors = this.inputField.value.toLowerCase().split(" ").removeSpaces(); 
-
-    var vals = [];
-    var isValidInput = true;  
-
-    var iterations = (inputColors.length == 4) ? 4 : 3;
-
-    // Validate user input and translate each color to a numeric value
-    for (var i = 0; i < iterations; i++){
-        inputColors[i] = (i == 3) ? 
-            ResistorCalculator.getColor(inputColors[i], ResistorCalculator.TOLERANCES) : 
-            ResistorCalculator.getColor(inputColors[i], ResistorCalculator.COLOR_VALUES, ResistorCalculator.COLOR_ALIASES);
-        if (inputColors[i] == false)
-            isValidInput = false;
-        else
-            vals[i] = (i == 3) ? ResistorCalculator.TOLERANCES[inputColors[i]] : ResistorCalculator.COLOR_VALUES[inputColors[i]];
-
+    // Translate user input into colors to display
+    for (var i = 0; i < numIterations; i++){
+        inputColors[i] = (i == 3) ? RC.getColor(inputColors[i], RC.TOLERANCES) : 
+                                    RC.getColor(inputColors[i], RC.COLOR_VALUES, RC.COLOR_ALIASES);
         this.displayColor(i, inputColors[i]);
     }
 
-    // If the user didn't input the tolerance band's color, display its default color
-    if (inputColors.length < 4)
-        this.displayColor(3, ResistorCalculator.DEFAULT_COLORS[3]);
+    // If the user didn't provide a tolerance band color, display the default color
+    if (len < 4) this.displayColor(3, RC.DEFAULT_COLORS[3]);
 
-    if (inputColors.length !=3 && inputColors.length != 4)
-        isValidInput = false;
-
-    if (isValidInput)
-        this.resultText.innerHTML = ResistorCalculator.formatValue(vals);
-    else
-        this.resultText.innerHTML = "Expecting three color bands <br /><span class='small'>(and optional tolerance band)...</span>";
+    if (len < 3 || len > 4 || inputColors.indexOf(false) != -1) // if input is invalid
+        this.resultText.innerHTML = "Expecting three color bands <br />" + 
+                                    "<span class='small'>(and optional tolerance band)...</span>";
+    else {
+        var vals = [];
+        for (var i = 0; i < len; i++){
+            vals[i] = (i == 3) ? RC.TOLERANCES[inputColors[i]] : RC.COLOR_VALUES[inputColors[i]];
+        }
+        this.resultText.innerHTML = RC.formatValue(vals);
+    }
 };
 
+// Given a valid array of three or four digits, display the resistance. 
 ResistorCalculator.formatValue = function(vals){
     var tolerance = "";
     if (vals.length == 4) tolerance = " (with tolerance of &plusmn;" + vals[3] + "%)";
@@ -111,14 +107,14 @@ ResistorCalculator.formatValue = function(vals){
     return ret + "&Omega;" + tolerance;
 };
 
-/* Change the color of a band */
+// Change the color of a band 
 ResistorCalculator.prototype.displayColor = function(index, color){
-    color = (color == undefined) ? "" : color;
+    color = (color === undefined) ? "" : color;
     var myBand = document.getElementById(this.getBandId(index));
     myBand.className = (index == 3) ? "band tol " + color : "band " + color;
 };
 
-/* Remove the empty strings from an array */
+// Remove empty strings from an array
 Array.prototype.removeSpaces = function () {
     var arr = this;
     var index = arr.indexOf("");
@@ -129,17 +125,20 @@ Array.prototype.removeSpaces = function () {
     return arr;
 };
 
+// Display default field value, result text, and band colors
 ResistorCalculator.prototype.displayDefaults = function(){
     this.resultText.innerHTML = "Type in the resistor's color code!"; 
     this.inputField.value = ResistorCalculator.DEFAULT_TEXT;
-    this.inputField.style.color = "#888";
+    this.inputField.style.color = "gray";
     for (var i = 0; i < 4; i++){
         var myBand = document.getElementById(this.getBandId(i));
-        myBand.className = (i == 3) ? "band tol " + ResistorCalculator.DEFAULT_COLORS[i] : "band "  + ResistorCalculator.DEFAULT_COLORS[i];
+        var myClasses = (i == 3) ? " band tol " : "band ";
+        myBand.className = myClasses + ResistorCalculator.DEFAULT_COLORS[i];
     }
 };
 
-/* Translate user input to a standard color name */
+// Translate user input to a standard color name and returns 
+// false if there is no match. 
 ResistorCalculator.getColor = function(input, arr, aliases){
     for (var key in arr){
         if (key.indexOf(input) == 0)
