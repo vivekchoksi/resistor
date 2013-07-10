@@ -16,7 +16,7 @@ h1 {
 	font-size: 80%;
 }
 
-.stripe {
+.band {
 	width: 23px;
 	height: 46px;
 	margin: 0px;
@@ -27,7 +27,7 @@ h1 {
 	z-index: -1; 
 }
 
-.stripe.tol {
+.band.tol {
     position: absolute; 
 	width: 19px;
 	height: 62px;

@@ -12,16 +12,18 @@
 
     <h1> easy resistance calculator </h1>
 
-    <div id="img_container" class="container"></div>
+    <div id="mycontainer" class="container"></div>
 
-    <input type="text" id="colorcode" />
+    <input type="text" id="myinputfield" />
+
+    <p id="myresulttext" class="resulttext"></p>
 
   <script type="text/javascript" src="ResistorCalculator.js"></script>
 
   <script type="text/javascript">
     //<![CDATA[
       window.onload = function(event) {
-        rc = new ResistorCalculator("colorcode", "img_container");  
+        rc = new ResistorCalculator("myinputfield", "mycontainer", "myresulttext");  
     } 
    //]]>
   </script>
