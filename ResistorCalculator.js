@@ -14,13 +14,18 @@ function ResistorCalculator(inputField, imgContainer, resultText){
     this.resultText = document.getElementById(resultText);
     var imgContainer = document.getElementById(imgContainer);
 
-    this.idPrefix = ResistorCalculator.getId();
+    // This privileged method uses the unique id of imgContainer to create
+    // a unique id for a resistor color band. 
+    ResistorCalculator.prototype.getBandId = function(bandIndex){
+        var uniqueIdPrefix = imgContainer + "_band_";
+        return uniqueIdPrefix + bandIndex;
+    };
 
     // Create new divs representing color bands
     this.bands = [];
     for (var i = 0; i < 4; i++){
         this.bands[i] = document.createElement("DIV");
-        this.bands[i].id = "band" + i.toString();
+        this.bands[i].id = this.getBandId(i);
         imgContainer.appendChild(this.bands[i]);
     }
 
@@ -33,8 +38,8 @@ function ResistorCalculator(inputField, imgContainer, resultText){
         obj.displayResistance();
     };
     this.inputField.onfocus = function(){
-        // Clear the input field *only* if it is displaying the
-        // default text that the user did not type.
+        // Clear the input field *only* if it is displaying auto-
+        // generated default text. 
         if (isDefaultText) {
             obj.inputField.value = "";
             isDefaultText = false;
@@ -45,6 +50,7 @@ function ResistorCalculator(inputField, imgContainer, resultText){
     };
     this.inputField.onblur = function(){
         obj.inputField.style.color = "#888";
+        // Re-display default text only if inputField is blank
         if (obj.inputField.value == "") {
             obj.displayDefaults();
             isDefaultText = true;
@@ -54,9 +60,8 @@ function ResistorCalculator(inputField, imgContainer, resultText){
 
 ResistorCalculator.prototype.displayResistance = function(){
 
-    // Grab input text as array into inputColors
-    var inputColors = this.inputField.value.toLowerCase().split(" "); 
-    inputColors = Array.removeSpaces(inputColors);
+    // Grab input text into the array inputColors
+    var inputColors = this.inputField.value.toLowerCase().split(" ").removeSpaces(); 
 
     var vals = [];
     var isValidInput = true;  
@@ -65,7 +70,9 @@ ResistorCalculator.prototype.displayResistance = function(){
 
     // Validate user input and translate each color to a numeric value
     for (var i = 0; i < iterations; i++){
-        inputColors[i] = (i == 3) ? ResistorCalculator.getColor(inputColors[i], ResistorCalculator.TOLERANCES) : ResistorCalculator.getColor(inputColors[i], ResistorCalculator.COLOR_VALUES, ResistorCalculator.COLOR_ALIASES);
+        inputColors[i] = (i == 3) ? 
+            ResistorCalculator.getColor(inputColors[i], ResistorCalculator.TOLERANCES) : 
+            ResistorCalculator.getColor(inputColors[i], ResistorCalculator.COLOR_VALUES, ResistorCalculator.COLOR_ALIASES);
         if (inputColors[i] == false)
             isValidInput = false;
         else
@@ -107,12 +114,13 @@ ResistorCalculator.formatValue = function(vals){
 /* Change the color of a band */
 ResistorCalculator.prototype.displayColor = function(index, color){
     color = (color == undefined) ? "" : color;
-    var myBand = document.getElementById("band" + index.toString());
+    var myBand = document.getElementById(this.getBandId(index));
     myBand.className = (index == 3) ? "band tol " + color : "band " + color;
 };
 
-/* Strip an array of empty strings */
-Array.removeSpaces = function (arr) {
+/* Remove the empty strings from an array */
+Array.prototype.removeSpaces = function () {
+    var arr = this;
     var index = arr.indexOf("");
     while (index != -1){
         arr.splice(index, 1);
@@ -126,7 +134,7 @@ ResistorCalculator.prototype.displayDefaults = function(){
     this.inputField.value = ResistorCalculator.DEFAULT_TEXT;
     this.inputField.style.color = "#888";
     for (var i = 0; i < 4; i++){
-        var myBand = document.getElementById("band" + i.toString());
+        var myBand = document.getElementById(this.getBandId(i));
         myBand.className = (i == 3) ? "band tol " + ResistorCalculator.DEFAULT_COLORS[i] : "band "  + ResistorCalculator.DEFAULT_COLORS[i];
     }
 };
